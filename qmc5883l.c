@@ -7,7 +7,7 @@ typedef struct qmc5883l {
 	qmc5883l_range_t  			range;						/*!< Sensor field range */
 	qmc5883l_opr_mode_t  		opr_mode;  					/*!< Operating mode */
 	qmc5883l_data_rate_t  		data_rate;					/*!< Data output rate */
-	qmc5883l_over_sample_rate_t samples;					/*!< Over sample rate */
+	qmc5883l_sample_rate_t 		sample_rate;				/*!< Over sample rate */
 	int 						mag_bias_x;  				/*!< Magnetometer bias x axis */
 	int 						mag_bias_y;  				/*!< Magnetometer bias y axis */
 	int 						mag_bias_z;  				/*!< Magnetometer bias z axis */
@@ -39,14 +39,13 @@ err_code_t qmc5883l_set_config(qmc5883l_handle_t handle, qmc5883l_cfg_t config)
 	handle->range = config.range;
 	handle->opr_mode = config.opr_mode;
 	handle->data_rate = config.data_rate;
-	handle->samples = config.samples;
+	handle->sample_rate = config.sample_rate;
 	handle->mag_bias_x = config.mag_bias_x;
 	handle->mag_bias_y = config.mag_bias_y;
 	handle->mag_bias_z = config.mag_bias_z;
 	handle->i2c_send = config.i2c_send;
 	handle->i2c_recv = config.i2c_recv;
 	handle->delay = config.delay;
-	handle->mag_scaling_factor = mag_scaling_factor;
 
 	return ERR_CODE_SUCCESS;
 }
