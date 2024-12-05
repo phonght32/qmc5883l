@@ -29,7 +29,7 @@ extern "C" {
 
 #include "err_code.h"
 
-#define QMC5883L_I2C_ADDR		(0x1E)
+#define QMC5883L_I2C_ADDR		(0x0D)
 
 typedef err_code_t (*qmc5883l_func_i2c_send)(uint8_t reg_addr, uint8_t *buf_send, uint16_t len);
 typedef err_code_t (*qmc5883l_func_i2c_recv)(uint8_t reg_addr, uint8_t *buf_recv, uint16_t len);
@@ -70,11 +70,16 @@ typedef enum {
  * @brief   Over sample rate.
  */
 typedef enum {
-	QMC5883L_SAMPLE_RATE_64 = 0,							/*!< 64 sample */
-	QMC5883L_SAMPLE_RATE_128,								/*!< 128 samples */
+	QMC5883L_SAMPLE_RATE_512 = 0,							/*!< 512 sample */
 	QMC5883L_SAMPLE_RATE_256,								/*!< 256 samples */
-	QMC5883L_SAMPLE_RATE_512								/*!< 512 samples */
+	QMC5883L_SAMPLE_RATE_128,								/*!< 128 samples */
+	QMC5883L_SAMPLE_RATE_64									/*!< 64 samples */
 } qmc5883l_sample_rate_t;
+
+typedef enum {
+	QMC5883L_INTERRUPT_ENABLE = 0,
+	QMC5883L_INTERRUPT_DISABLE
+} qmc5883l_intr_en_t;
 
 /**
  * @brief   Configuration structure.
@@ -84,6 +89,7 @@ typedef struct {
 	qmc5883l_opr_mode_t  		opr_mode;  					/*!< Operating mode */
 	qmc5883l_data_rate_t  		data_rate;					/*!< Data output rate */
 	qmc5883l_sample_rate_t 		sample_rate;				/*!< Over sample rate */
+	qmc5883l_intr_en_t 			intr_en;					/*!< Enable interupt */
 	int 						mag_bias_x;  				/*!< Magnetometer bias x axis */
 	int 						mag_bias_y;  				/*!< Magnetometer bias y axis */
 	int 						mag_bias_z;  				/*!< Magnetometer bias z axis */
