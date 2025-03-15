@@ -128,7 +128,7 @@ err_code_t qmc5883l_get_mag_raw(qmc5883l_handle_t handle, int16_t *raw_x, int16_
 	return ERR_CODE_SUCCESS;
 }
 
-err_code_t qmc5883l_get_mag_calib(qmc5883l_handle_t handle, int16_t *calib_x, int16_t *calib_y, int16_t *calib_z)
+err_code_t qmc5883l_get_mag_calib(qmc5883l_handle_t handle, float *calib_x, float *calib_y, float *calib_z)
 {
 	/* Check if handle structure is NULL */
 	if (handle == NULL)
