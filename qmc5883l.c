@@ -25,9 +25,18 @@ typedef struct qmc5883l {
 	qmc5883l_data_rate_t  		data_rate;					/*!< Data output rate */
 	qmc5883l_sample_rate_t 		sample_rate;				/*!< Over sample rate */
 	qmc5883l_intr_en_t 			intr_en;					/*!< Enable interupt */
-	int 						mag_bias_x;  				/*!< Magnetometer bias x axis */
-	int 						mag_bias_y;  				/*!< Magnetometer bias y axis */
-	int 						mag_bias_z;  				/*!< Magnetometer bias z axis */
+	float 						hard_bias_x;  				/*!< Magnetometer hard iron bias x axis */
+	float 						hard_bias_y;  				/*!< Magnetometer hard iron bias y axis */
+	float 						hard_bias_z;  				/*!< Magnetometer hard iron bias z axis */
+	float 						soft_bias_c11;				/*!< Magnetometer soft iron bias */
+	float 						soft_bias_c12;				/*!< Magnetometer soft iron bias */
+	float 						soft_bias_c13;				/*!< Magnetometer soft iron bias */
+	float 						soft_bias_c21;				/*!< Magnetometer soft iron bias */
+	float 						soft_bias_c22;				/*!< Magnetometer soft iron bias */
+	float 						soft_bias_c23;				/*!< Magnetometer soft iron bias */
+	float 						soft_bias_c31;				/*!< Magnetometer soft iron bias */
+	float 						soft_bias_c32;				/*!< Magnetometer soft iron bias */
+	float 						soft_bias_c33;				/*!< Magnetometer soft iron bias */
 	qmc5883l_func_i2c_send      i2c_send;        			/*!< QMC5883L send bytes */
 	qmc5883l_func_i2c_recv      i2c_recv;         			/*!< QMC5883L receive bytes */
 	qmc5883l_func_delay         delay;                 		/*!< QMC5883L delay function */
@@ -58,9 +67,18 @@ err_code_t qmc5883l_set_config(qmc5883l_handle_t handle, qmc5883l_cfg_t config)
 	handle->data_rate = config.data_rate;
 	handle->sample_rate = config.sample_rate;
 	handle->intr_en = config.intr_en;
-	handle->mag_bias_x = config.mag_bias_x;
-	handle->mag_bias_y = config.mag_bias_y;
-	handle->mag_bias_z = config.mag_bias_z;
+	handle->hard_bias_x = config.hard_bias_x;
+	handle->hard_bias_y = config.hard_bias_y;
+	handle->hard_bias_z = config.hard_bias_z;
+	handle->soft_bias_c11 = config.soft_bias_c11;
+	handle->soft_bias_c12 = config.soft_bias_c12;
+	handle->soft_bias_c13 = config.soft_bias_c13;
+	handle->soft_bias_c21 = config.soft_bias_c21;
+	handle->soft_bias_c22 = config.soft_bias_c22;
+	handle->soft_bias_c23 = config.soft_bias_c23;
+	handle->soft_bias_c31 = config.soft_bias_c31;
+	handle->soft_bias_c32 = config.soft_bias_c32;
+	handle->soft_bias_c33 = config.soft_bias_c33;
 	handle->i2c_send = config.i2c_send;
 	handle->i2c_recv = config.i2c_recv;
 	handle->delay = config.delay;
@@ -77,14 +95,6 @@ err_code_t qmc5883l_config(qmc5883l_handle_t handle)
 	}
 
 	uint8_t data[1] = {0};
-
-//	data[0] = handle-> intr_en;
-//	handle->i2c_send(QMC5883L_REG_CONFIG2, data, 1);
-
-//	data[0] = 0x80;
-//	handle->i2c_send(QMC5883L_REG_CONFIG2, data, 1);
-
-//	handle->delay(1000);
 
 	data[0] = 0x01;
 	handle->i2c_send(QMC5883L_REG_RESET, data, 1);
@@ -126,6 +136,19 @@ err_code_t qmc5883l_get_mag_calib(qmc5883l_handle_t handle, int16_t *calib_x, in
 		return ERR_CODE_NULL_PTR;
 	}
 
+	int16_t raw_x, raw_y, raw_z;
+	float xm_off, ym_off, zm_off;
+
+	qmc5883l_get_mag_raw(handle, &raw_x, &raw_y, &raw_z);
+
+	xm_off  = raw_x - handle->hard_bias_x;
+	ym_off  = raw_y - handle->hard_bias_y;
+	zm_off  = raw_z - handle->hard_bias_z;
+
+	*calib_x = xm_off *  handle->soft_bias_c11 + ym_off *  handle->soft_bias_c12  + zm_off *  handle->soft_bias_c13;
+	*calib_y = xm_off *  handle->soft_bias_c21 + ym_off *  handle->soft_bias_c22  + zm_off *  handle->soft_bias_c23;
+	*calib_z = xm_off *  handle->soft_bias_c31 + ym_off *  handle->soft_bias_c32  + zm_off *  handle->soft_bias_c33;
+
 	return ERR_CODE_SUCCESS;
 }
 
@@ -148,9 +171,9 @@ err_code_t qmc5883l_set_mag_bias(qmc5883l_handle_t handle, int16_t bias_x, int16
 		return ERR_CODE_NULL_PTR;
 	}
 
-	handle->mag_bias_x = bias_x;
-	handle->mag_bias_y = bias_y;
-	handle->mag_bias_z = bias_z;
+	handle->hard_bias_x = bias_x;
+	handle->hard_bias_y = bias_y;
+	handle->hard_bias_z = bias_z;
 
 	return ERR_CODE_SUCCESS;
 }
@@ -163,14 +186,10 @@ err_code_t qmc5883l_get_mag_bias(qmc5883l_handle_t handle, int16_t *bias_x, int1
 		return ERR_CODE_NULL_PTR;
 	}
 
-	*bias_x = handle->mag_bias_x;
-	*bias_y = handle->mag_bias_y;
-	*bias_z = handle->mag_bias_z;
+	*bias_x = handle->hard_bias_x;
+	*bias_y = handle->hard_bias_y;
+	*bias_z = handle->hard_bias_z;
 
 	return ERR_CODE_SUCCESS;
 }
 
-err_code_t qmc5883l_auto_calib(qmc5883l_handle_t handle)
-{
-	return ERR_CODE_SUCCESS;
-}

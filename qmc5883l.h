@@ -90,9 +90,18 @@ typedef struct {
 	qmc5883l_data_rate_t  		data_rate;					/*!< Data output rate */
 	qmc5883l_sample_rate_t 		sample_rate;				/*!< Over sample rate */
 	qmc5883l_intr_en_t 			intr_en;					/*!< Enable interupt */
-	int 						mag_bias_x;  				/*!< Magnetometer bias x axis */
-	int 						mag_bias_y;  				/*!< Magnetometer bias y axis */
-	int 						mag_bias_z;  				/*!< Magnetometer bias z axis */
+	float 						hard_bias_x;  				/*!< Magnetometer hard iron bias x axis */
+	float 						hard_bias_y;  				/*!< Magnetometer hard iron bias y axis */
+	float 						hard_bias_z;  				/*!< Magnetometer hard iron bias z axis */
+	float 						soft_bias_c11;				/*!< Magnetometer soft iron bias */
+	float 						soft_bias_c12;				/*!< Magnetometer soft iron bias */
+	float 						soft_bias_c13;				/*!< Magnetometer soft iron bias */
+	float 						soft_bias_c21;				/*!< Magnetometer soft iron bias */
+	float 						soft_bias_c22;				/*!< Magnetometer soft iron bias */
+	float 						soft_bias_c23;				/*!< Magnetometer soft iron bias */
+	float 						soft_bias_c31;				/*!< Magnetometer soft iron bias */
+	float 						soft_bias_c32;				/*!< Magnetometer soft iron bias */
+	float 						soft_bias_c33;				/*!< Magnetometer soft iron bias */
 	qmc5883l_func_i2c_send      i2c_send;        			/*!< QMC5883L send bytes */
 	qmc5883l_func_i2c_recv      i2c_recv;         			/*!< QMC5883L receive bytes */
 	qmc5883l_func_delay         delay;                 		/*!< QMC5883L delay function */
@@ -204,16 +213,6 @@ err_code_t qmc5883l_set_mag_bias(qmc5883l_handle_t handle, int16_t bias_x, int16
  */
 err_code_t qmc5883l_get_mag_bias(qmc5883l_handle_t handle, int16_t *bias_x, int16_t *bias_y, int16_t *bias_z);
 
-/*
- * @brief   Auto calibrate all magnetometer bias value.
- *
- * @param   handle Handle structure.
- *
- * @return
- *      - ERR_CODE_SUCCESS: Success.
- *      - Others:           Fail.
- */
-err_code_t qmc5883l_auto_calib(qmc5883l_handle_t handle);
 
 #ifdef __cplusplus
 }
