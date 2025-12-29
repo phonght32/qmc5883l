@@ -27,7 +27,7 @@
 extern "C" {
 #endif
 
-#include "err_code.h"
+#include "stdint.h"
 
 #define QMC5883L_I2C_ADDR		(0x0D)
 
