@@ -31,8 +31,15 @@ extern "C" {
 
 #define QMC5883L_I2C_ADDR		(0x0D)
 
-typedef err_code_t (*qmc5883l_func_i2c_send)(uint8_t reg_addr, uint8_t *buf_send, uint16_t len);
-typedef err_code_t (*qmc5883l_func_i2c_recv)(uint8_t reg_addr, uint8_t *buf_recv, uint16_t len);
+typedef enum 
+{
+	QMC5883L_STATUS_SUCCESS,
+	QMC5883L_STATUS_FAILED,
+	QMC5883L_STATUS_INVALID_ARG
+} qmc5883l_status_t;
+
+typedef qmc5883l_status_t (*qmc5883l_func_i2c_send)(uint8_t reg_addr, uint8_t *buf_send, uint16_t len);
+typedef qmc5883l_status_t (*qmc5883l_func_i2c_recv)(uint8_t reg_addr, uint8_t *buf_recv, uint16_t len);
 typedef void (*qmc5883l_func_delay)(uint32_t ms);
 
 /**
@@ -116,7 +123,7 @@ typedef struct {
  *
  * @return
  *      - Handle structure: Success.
- *      - Others:           Fail.
+ *      - Others: Failed.
  */
 qmc5883l_handle_t qmc5883l_init(void);
 
@@ -127,10 +134,10 @@ qmc5883l_handle_t qmc5883l_init(void);
  * @param   config Configuration structure.
  *
  * @return
- *      - ERR_CODE_SUCCESS: Success.
- *      - Others:           Fail.
+ *      - QMC5883L_STATUS_SUCCESS: Success.
+ *      - Others: Failed.
  */
-err_code_t qmc5883l_set_config(qmc5883l_handle_t handle, qmc5883l_cfg_t config);
+qmc5883l_status_t qmc5883l_set_config(qmc5883l_handle_t handle, qmc5883l_cfg_t config);
 
 /*
  * @brief   Configure QMC5883L to run.
@@ -138,10 +145,10 @@ err_code_t qmc5883l_set_config(qmc5883l_handle_t handle, qmc5883l_cfg_t config);
  * @param 	handle Handle structure.
  *
  * @return
- *      - ERR_CODE_SUCCESS: Success.
- *      - Others:           Fail.
+ *      - QMC5883L_STATUS_SUCCESS: Success.
+ *      - Others: Failed.
  */
-err_code_t qmc5883l_config(qmc5883l_handle_t handle);
+qmc5883l_status_t qmc5883l_config(qmc5883l_handle_t handle);
 
 /*
  * @brief   Get magnetometer raw value.
@@ -152,10 +159,10 @@ err_code_t qmc5883l_config(qmc5883l_handle_t handle);
  * @param   raw_z Raw value z axis.
  *
  * @return
- *      - ERR_CODE_SUCCESS: Success.
- *      - Others:           Fail.
+ *      - QMC5883L_STATUS_SUCCESS: Success.
+ *      - Others: Failed.
  */
-err_code_t qmc5883l_get_mag_raw(qmc5883l_handle_t handle, int16_t *raw_x, int16_t *raw_y, int16_t *raw_z);
+qmc5883l_status_t qmc5883l_get_mag_raw(qmc5883l_handle_t handle, int16_t *raw_x, int16_t *raw_y, int16_t *raw_z);
 
 /*
  * @brief   Get magnetometer calibrated data.
@@ -166,10 +173,10 @@ err_code_t qmc5883l_get_mag_raw(qmc5883l_handle_t handle, int16_t *raw_x, int16_
  * @param   calib_z Calibrated data z axis.
  *
  * @return
- *      - ERR_CODE_SUCCESS: Success.
- *      - Others:           Fail.
+ *      - QMC5883L_STATUS_SUCCESS: Success.
+ *      - Others: Failed.
  */
-err_code_t qmc5883l_get_mag_calib(qmc5883l_handle_t handle, float *calib_x, float *calib_y, float *calib_z);
+qmc5883l_status_t qmc5883l_get_mag_calib(qmc5883l_handle_t handle, float *calib_x, float *calib_y, float *calib_z);
 
 /*
  * @brief   Get magnetometer scaled data.
@@ -180,10 +187,10 @@ err_code_t qmc5883l_get_mag_calib(qmc5883l_handle_t handle, float *calib_x, floa
  * @param   scale_z Scaled data z axis.
  *
  * @return
- *      - ERR_CODE_SUCCESS: Success.
- *      - Others:           Fail.
+ *      - QMC5883L_STATUS_SUCCESS: Success.
+ *      - Others: Failed.
  */
-err_code_t qmc5883l_get_mag_scale(qmc5883l_handle_t handle, float *scale_x, float *scale_y, float *scale_z);
+qmc5883l_status_t qmc5883l_get_mag_scale(qmc5883l_handle_t handle, float *scale_x, float *scale_y, float *scale_z);
 
 /*
  * @brief   Set magnetometer bias data.
@@ -194,10 +201,10 @@ err_code_t qmc5883l_get_mag_scale(qmc5883l_handle_t handle, float *scale_x, floa
  * @param   bias_z Bias data z axis.
  *
  * @return
- *      - ERR_CODE_SUCCESS: Success.
- *      - Others:           Fail.
+ *      - QMC5883L_STATUS_SUCCESS: Success.
+ *      - Others: Failed.
  */
-err_code_t qmc5883l_set_mag_bias(qmc5883l_handle_t handle, int16_t bias_x, int16_t bias_y, int16_t bias_z);
+qmc5883l_status_t qmc5883l_set_mag_bias(qmc5883l_handle_t handle, int16_t bias_x, int16_t bias_y, int16_t bias_z);
 
 /*
  * @brief   Set magnetometer bias data.
@@ -208,10 +215,10 @@ err_code_t qmc5883l_set_mag_bias(qmc5883l_handle_t handle, int16_t bias_x, int16
  * @param   bias_z Bias data z axis.
  *
  * @return
- *      - ERR_CODE_SUCCESS: Success.
- *      - Others:           Fail.
+ *      - QMC5883L_STATUS_SUCCESS: Success.
+ *      - Others: Failed.
  */
-err_code_t qmc5883l_get_mag_bias(qmc5883l_handle_t handle, int16_t *bias_x, int16_t *bias_y, int16_t *bias_z);
+qmc5883l_status_t qmc5883l_get_mag_bias(qmc5883l_handle_t handle, int16_t *bias_x, int16_t *bias_y, int16_t *bias_z);
 
 
 #ifdef __cplusplus

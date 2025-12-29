@@ -54,12 +54,12 @@ qmc5883l_handle_t qmc5883l_init(void)
 	return handle;
 }
 
-err_code_t qmc5883l_set_config(qmc5883l_handle_t handle, qmc5883l_cfg_t config)
+qmc5883l_status_t qmc5883l_set_config(qmc5883l_handle_t handle, qmc5883l_cfg_t config)
 {
 	/* Check if handle structure is NULL */
 	if (handle == NULL)
 	{
-		return ERR_CODE_NULL_PTR;
+		return QMC5883L_STATUS_INVALID_ARG;
 	}
 
 	handle->range = config.range;
@@ -83,15 +83,15 @@ err_code_t qmc5883l_set_config(qmc5883l_handle_t handle, qmc5883l_cfg_t config)
 	handle->i2c_recv = config.i2c_recv;
 	handle->delay = config.delay;
 
-	return ERR_CODE_SUCCESS;
+	return QMC5883L_STATUS_SUCCESS;
 }
 
-err_code_t qmc5883l_config(qmc5883l_handle_t handle)
+qmc5883l_status_t qmc5883l_config(qmc5883l_handle_t handle)
 {
 	/* Check if handle structure is NULL */
 	if (handle == NULL)
 	{
-		return ERR_CODE_NULL_PTR;
+		return QMC5883L_STATUS_INVALID_ARG;
 	}
 
 	uint8_t data[1] = {0};
@@ -106,15 +106,15 @@ err_code_t qmc5883l_config(qmc5883l_handle_t handle)
 
 
 
-	return ERR_CODE_SUCCESS;
+	return QMC5883L_STATUS_SUCCESS;
 }
 
-err_code_t qmc5883l_get_mag_raw(qmc5883l_handle_t handle, int16_t *raw_x, int16_t *raw_y, int16_t *raw_z)
+qmc5883l_status_t qmc5883l_get_mag_raw(qmc5883l_handle_t handle, int16_t *raw_x, int16_t *raw_y, int16_t *raw_z)
 {
 	/* Check if handle structure is NULL */
 	if (handle == NULL)
 	{
-		return ERR_CODE_NULL_PTR;
+		return QMC5883L_STATUS_INVALID_ARG;
 	}
 
 	uint8_t mag_raw_data[7] = {0};
@@ -125,15 +125,15 @@ err_code_t qmc5883l_get_mag_raw(qmc5883l_handle_t handle, int16_t *raw_x, int16_
 	*raw_y = (int16_t)((mag_raw_data[3] << 8) | mag_raw_data[2]);
 	*raw_z = (int16_t)((mag_raw_data[5] << 8) | mag_raw_data[4]);
 
-	return ERR_CODE_SUCCESS;
+	return QMC5883L_STATUS_SUCCESS;
 }
 
-err_code_t qmc5883l_get_mag_calib(qmc5883l_handle_t handle, float *calib_x, float *calib_y, float *calib_z)
+qmc5883l_status_t qmc5883l_get_mag_calib(qmc5883l_handle_t handle, float *calib_x, float *calib_y, float *calib_z)
 {
 	/* Check if handle structure is NULL */
 	if (handle == NULL)
 	{
-		return ERR_CODE_NULL_PTR;
+		return QMC5883L_STATUS_INVALID_ARG;
 	}
 
 	int16_t raw_x, raw_y, raw_z;
@@ -149,47 +149,47 @@ err_code_t qmc5883l_get_mag_calib(qmc5883l_handle_t handle, float *calib_x, floa
 	*calib_y = xm_off *  handle->soft_bias_c21 + ym_off *  handle->soft_bias_c22  + zm_off *  handle->soft_bias_c23;
 	*calib_z = xm_off *  handle->soft_bias_c31 + ym_off *  handle->soft_bias_c32  + zm_off *  handle->soft_bias_c33;
 
-	return ERR_CODE_SUCCESS;
+	return QMC5883L_STATUS_SUCCESS;
 }
 
-err_code_t qmc5883l_get_mag_scale(qmc5883l_handle_t handle, float *scale_x, float *scale_y, float *scale_z)
+qmc5883l_status_t qmc5883l_get_mag_scale(qmc5883l_handle_t handle, float *scale_x, float *scale_y, float *scale_z)
 {
 	/* Check if handle structure is NULL */
 	if (handle == NULL)
 	{
-		return ERR_CODE_NULL_PTR;
+		return QMC5883L_STATUS_INVALID_ARG;
 	}
 
-	return ERR_CODE_SUCCESS;
+	return QMC5883L_STATUS_SUCCESS;
 }
 
-err_code_t qmc5883l_set_mag_bias(qmc5883l_handle_t handle, int16_t bias_x, int16_t bias_y, int16_t bias_z)
+qmc5883l_status_t qmc5883l_set_mag_bias(qmc5883l_handle_t handle, int16_t bias_x, int16_t bias_y, int16_t bias_z)
 {
 	/* Check if handle structure is NULL */
 	if (handle == NULL)
 	{
-		return ERR_CODE_NULL_PTR;
+		return QMC5883L_STATUS_INVALID_ARG;
 	}
 
 	handle->hard_bias_x = bias_x;
 	handle->hard_bias_y = bias_y;
 	handle->hard_bias_z = bias_z;
 
-	return ERR_CODE_SUCCESS;
+	return QMC5883L_STATUS_SUCCESS;
 }
 
-err_code_t qmc5883l_get_mag_bias(qmc5883l_handle_t handle, int16_t *bias_x, int16_t *bias_y, int16_t *bias_z)
+qmc5883l_status_t qmc5883l_get_mag_bias(qmc5883l_handle_t handle, int16_t *bias_x, int16_t *bias_y, int16_t *bias_z)
 {
 	/* Check if handle structure is NULL */
 	if (handle == NULL)
 	{
-		return ERR_CODE_NULL_PTR;
+		return QMC5883L_STATUS_INVALID_ARG;
 	}
 
 	*bias_x = handle->hard_bias_x;
 	*bias_y = handle->hard_bias_y;
 	*bias_z = handle->hard_bias_z;
 
-	return ERR_CODE_SUCCESS;
+	return QMC5883L_STATUS_SUCCESS;
 }
 
